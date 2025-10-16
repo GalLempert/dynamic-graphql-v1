@@ -7,7 +7,7 @@ import com.example.dynamicgraphql.schema.SchemaRegistry;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsRuntimeWiring;
 import com.netflix.graphql.dgs.DgsTypeDefinitionRegistry;
-import graphql.language.TypeDefinitionRegistry;
+import graphql.schema.idl.TypeDefinitionRegistry;
 import graphql.schema.idl.RuntimeWiring;
 
 @DgsComponent

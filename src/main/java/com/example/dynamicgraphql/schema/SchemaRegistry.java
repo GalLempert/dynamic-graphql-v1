@@ -1,7 +1,7 @@
 package com.example.dynamicgraphql.schema;
 
 import com.example.dynamicgraphql.config.EngineProperties;
-import graphql.language.TypeDefinitionRegistry;
+import graphql.schema.idl.TypeDefinitionRegistry;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;

@@ -39,24 +39,21 @@ public class DocumentGrpcService implements BindableService {
                                 .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(Struct.getDefaultInstance()))
                                 .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(Empty.getDefaultInstance()))
                                 .build(),
-                        new io.grpc.stub.ServerCalls.UnaryMethod<Struct, Empty>() {
-                            @Override
-                            public void invoke(Struct value, StreamObserver<Empty> observer) {
-                                try {
-                                    String json = JsonFormat.printer().omittingInsignificantWhitespace().print(value);
-                                    Map<String, Object> document = OBJECT_MAPPER.readValue(json, MAP_TYPE);
-                                    mutationService.persist(document);
-                                    observer.onNext(Empty.getDefaultInstance());
-                                    observer.onCompleted();
-                                } catch (Exception e) {
-                                    log.error("Failed to handle gRPC document payload", e);
-                                    observer.onError(Status.INVALID_ARGUMENT
-                                            .withDescription("Unable to decode document payload")
-                                            .withCause(e)
-                                            .asRuntimeException());
-                                }
+                        io.grpc.stub.ServerCalls.asyncUnaryCall((value, observer) -> {
+                            try {
+                                String json = JsonFormat.printer().omittingInsignificantWhitespace().print(value);
+                                Map<String, Object> document = OBJECT_MAPPER.readValue(json, MAP_TYPE);
+                                mutationService.persist(document);
+                                observer.onNext(Empty.getDefaultInstance());
+                                observer.onCompleted();
+                            } catch (Exception e) {
+                                log.error("Failed to handle gRPC document payload", e);
+                                observer.onError(Status.INVALID_ARGUMENT
+                                        .withDescription("Unable to decode document payload")
+                                        .withCause(e)
+                                        .asRuntimeException());
                             }
-                        }))
+                        })))
                 .build();
     }
 }

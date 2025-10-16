@@ -23,9 +23,9 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 public class EngineConfiguration {
 
     @Bean
-    public SchemaRegistry schemaRegistry(EngineProperties properties, ResourceLoader resourceLoader) {
+    public SchemaRegistry schemaRegistry(EngineProperties properties, org.springframework.context.ApplicationContext applicationContext) {
         SchemaRegistry registry = new SchemaRegistry(properties);
-        registry.setResourceLoader(resourceLoader);
+        registry.setResourceLoader(applicationContext);
         return registry;
     }
 
@@ -37,8 +37,9 @@ public class EngineConfiguration {
                 .applyConnectionString(new ConnectionString(persistence.getConnectionString()))
                 .applyToSocketSettings(builder -> {
                     Duration timeout = persistence.getCommandTimeout();
-                    builder.connectTimeout((int) timeout.toMillis());
-                    builder.readTimeout((int) timeout.toMillis());
+                    int timeoutMs = (int) timeout.toMillis();
+                    builder.connectTimeout(timeoutMs, java.util.concurrent.TimeUnit.MILLISECONDS);
+                    builder.readTimeout(timeoutMs, java.util.concurrent.TimeUnit.MILLISECONDS);
                 })
                 .build();
         return MongoClients.create(settings);
@@ -46,7 +47,8 @@ public class EngineConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public KafkaProducer<String, Map<String, Object>> kafkaProducer(KafkaProperties properties) {
+    public KafkaProducer<String, Map<String, Object>> kafkaProducer(EngineProperties engineProperties) {
+        EngineProperties.KafkaProperties properties = engineProperties.getKafka();
         Map<String, Object> config = new java.util.HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, String.join(",", properties.getBootstrapServers()));
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);

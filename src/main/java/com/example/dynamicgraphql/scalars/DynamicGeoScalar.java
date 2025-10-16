@@ -49,7 +49,7 @@ public final class DynamicGeoScalar {
                 }
 
                 @Override
-                public Object parseLiteral(Value<?> input) throws CoercingParseLiteralException {
+                public Object parseLiteral(Object input) throws CoercingParseLiteralException {
                     if (input instanceof StringValue stringValue) {
                         return parseString(stringValue.getValue());
                     }
