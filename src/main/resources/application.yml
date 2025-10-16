@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: dynamic-graphql-engine
+  main:
+    web-application-type: reactive
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+engine:
+  zookeeper:
+    connection-string: localhost:2181
+    refresh-interval: PT30S
+    schema-root: /dynamic/graphql/schema
+    pipeline-root: /dynamic/graphql/pipelines
+  persistence:
+    connection-string: mongodb://localhost:27017
+    database: dynamic
+    collection: documents
+  kafka:
+    topic: dynamic-graphql-cdc
+    bootstrap-servers:
+      - localhost:9092

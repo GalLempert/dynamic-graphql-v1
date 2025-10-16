@@ -1,0 +1,6 @@
+# Maven wrapper downloads
+.mvn/wrapper/apache-maven-*
+.mvn/wrapper/*.zip
+
+# Build outputs
+target/
