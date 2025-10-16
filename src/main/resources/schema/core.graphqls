@@ -1,0 +1,18 @@
+scalar DateTime
+scalar Geo
+scalar JSON
+
+type EngineInfo {
+  name: String!
+  version: String!
+  schemaVersion: String!
+  requestId: String!
+}
+
+type Mutation {
+  _noop: Boolean
+}
+
+type Query {
+  engineInfo: EngineInfo!
+}
